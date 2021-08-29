@@ -23,8 +23,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                .csrf().disable()
                .authorizeRequests()
                .antMatchers("/").permitAll()
-               .antMatchers("book").hasAnyRole(Role.ADMIN.name(),Role.ESER.name())
-               .antMatchers(HttpMethod.GET,"book/**").hasAnyRole(Role.ADMIN.name(),Role.ESER.name())
+               .antMatchers("book").hasAnyRole(Role.ADMIN.name(),Role.USER.name())
+               .antMatchers(HttpMethod.GET,"book/**").hasAnyRole(Role.ADMIN.name(),Role.USER.name())
                .antMatchers(HttpMethod.POST,"book/**").hasRole(Role.ADMIN.name())
                .antMatchers(HttpMethod.DELETE,"book/**").hasRole(Role.ADMIN.name())
                .anyRequest()
@@ -46,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 User.builder()
                         .username("user")
                         .password(passwordEncoder().encode("user"))
-                        .roles(Role.ESER.name())
+                        .roles(Role.USER.name())
                         .build()
         );
     }
