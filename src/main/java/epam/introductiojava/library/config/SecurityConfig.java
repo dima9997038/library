@@ -1,6 +1,7 @@
 package epam.introductiojava.library.config;
 
 import epam.intoductoinjava.library.model.Role;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -12,10 +13,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.access.AccessDeniedHandler;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -23,14 +27,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                .csrf().disable()
                .authorizeRequests()
                .antMatchers("/").permitAll()
-               .antMatchers("book").hasAnyRole(Role.ADMIN.name(),Role.USER.name())
-               .antMatchers(HttpMethod.GET,"book/**").hasAnyRole(Role.ADMIN.name(),Role.USER.name())
-               .antMatchers(HttpMethod.POST,"book/**").hasRole(Role.ADMIN.name())
-               .antMatchers(HttpMethod.DELETE,"book/**").hasRole(Role.ADMIN.name())
+               .antMatchers("/book").hasAnyRole(Role.ADMIN.name(),Role.USER.name())
+               .antMatchers(HttpMethod.GET,"/book/**").hasAnyRole(Role.ADMIN.name(),Role.USER.name())
+               .antMatchers(HttpMethod.POST,"/book/**").hasRole(Role.ADMIN.name())
+               .antMatchers(HttpMethod.DELETE,"/book/**").hasRole(Role.ADMIN.name())
                .anyRequest()
                .authenticated()
                .and()
-               .httpBasic();
+               .formLogin()
+               .and()
+               .exceptionHandling().accessDeniedPage("/403");
+
 
     }
 
